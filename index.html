@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Entregas EWECAM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9fafb;
+      color: #333;
+    }
+    header {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      font-weight: bold;
+    }
+    .kpi {
+      text-align: center;
+    }
+    .kpi span {
+      display: block;
+      font-size: 1.4em;
+      margin-top: 4px;
+    }
+    main {
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      background: white;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .status {
+      padding: 6px 10px;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.85em;
+      display: inline-block;
+    }
+    .completo { background: #28a745; }
+    .parcial { background: #ffc107; color: black; }
+    .noentregado { background: #dc3545; }
+    .reagendado { background: #6c757d; }
+
+    #pieChart {
+      max-width: 500px;
+      margin: 0 auto 40px auto;
+    }
+
+    #map {
+      height: 400px;
+      margin: 0 auto;
+      max-width: 90%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <header>
+    <div class="kpi">Entregas Totales<span>150</span></div>
+    <div class="kpi">Entregas Completas<span>120</span></div>
+    <div class="kpi">Entregas a Tiempo<span>112</span></div>
+    <div class="kpi">Incidentes<span>5</span></div>
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Unidad</th>
+          <th>Destino</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2025-06-18</td><td>CAM123</td><td>Querétaro</td><td><span class="status completo">Entregado completo</span></td></tr>
+        <tr><td>2025-06-17</td><td>CAM123</td><td>Guanajuato</td><td><span class="status parcial">Entregado parcial</span></td></tr>
+        <tr><td>2025-06-16</td><td>CAM128</td><td>CDMX</td><td><span class="status noentregado">No entregado</span></td></tr>
+        <tr><td>2025-06-15</td><td>CAM127</td><td>San Luis Potosí</td><td><span class="status reagendado">Reagendado</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="text-align: center;">Porcentaje por Zona</h3>
+    <canvas id="pieChart"></canvas>
+
+    <h3 style="text-align: center;">Mapa de Entregas</h3>
+    <div id="map"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Pie Chart
+    new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Querétaro', 'Guanajuato', 'CDMX', 'San Luis Potosí'],
+        datasets: [{
+          data: [40, 30, 20, 10],
+          backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+        }]
+      }
+    });
+
+    // Mapa Leaflet
+    const map = L.map('map').setView([21.5, -100.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const truckIcon = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/743/743131.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+
+    const ubicaciones = [
+      { lugar: 'Querétaro', coords: [20.5888, -100.3899] },
+      { lugar: 'Guanajuato', coords: [21.0190, -101.2574] },
+      { lugar: 'CDMX', coords: [19.4326, -99.1332] },
+      { lugar: 'San Luis Potosí', coords: [22.1565, -100.9855] }
+    ];
+
+    ubicaciones.forEach(({ lugar, coords }) => {
+      L.marker(coords, { icon: truckIcon }).addTo(map).bindPopup(lugar);
+    });
+  </script>
+</body>
+</html>
