@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Entregas Ewecam - Mapa y Estatus</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #map {
+      height: 400px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: left;
+    }
+    .estatus-verde { background-color: #d4edda; }
+    .estatus-amarillo { background-color: #fff3cd; }
+    .estatus-rojo { background-color: #f8d7da; }
+  </style>
+</head>
+<body>
+
+  <h2>Mapa de Entregas Ewecam</h2>
+  <div id="map"></div>
+
+  <h3>Tabla de Entregas</h3>
+  <table id="tabla-entregas">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Operador</th>
+        <th>Hora entrega</th>
+        <th>Estatus</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // Datos simulados
+    const entregas = [
+      {
+        placa: 'ABC123',
+        operador: 'Juan Pérez',
+        hora: '2025-06-20 12:00',
+        estatus: 'A Tiempo',
+        latitud: 19.4326,
+        longitud: -99.1332
+      },
+      {
+        placa: 'XYZ789',
+        operador: 'Luis Gómez',
+        hora: '2025-06-20 13:30',
+        estatus: 'Con Retraso',
+        latitud: 20.6736,
+        longitud: -103.344
+      },
+      {
+        placa: 'LMN456',
+        operador: 'María López',
+        hora: '2025-06-20 14:45',
+        estatus: 'No Entregado',
+        latitud: 21.1619,
+        longitud: -86.8515
+      }
+    ];
+
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: { lat: 22.0, lng: -100.0 }
+      });
+
+      entregas.forEach(entrega => {
+        let color;
+        switch (entrega.estatus) {
+          case 'A Tiempo': color = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'; break;
+          case 'Con Retraso': color = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'; break;
+          case 'No Entregado': color = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'; break;
+        }
+
+        new google.maps.Marker({
+          position: { lat: entrega.latitud, lng: entrega.longitud },
+          map: map,
+          title: entrega.placa + ' - ' + entrega.operador,
+          icon: color
+        });
+
+        const row = document.createElement('tr');
+        row.className = entrega.estatus === 'A Tiempo' ? 'estatus-verde' :
+                        entrega.estatus === 'Con Retraso' ? 'estatus-amarillo' :
+                        'estatus-rojo';
+
+        row.innerHTML = `
+          <td>${entrega.placa}</td>
+          <td>${entrega.operador}</td>
+          <td>${entrega.hora}</td>
+          <td>${entrega.estatus}</td>
+        `;
+        document.querySelector('#tabla-entregas tbody').appendChild(row);
+      });
+    }
+  </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwtBw_8xT_SelruOj_ba5hGpYtvMH8MYA&callback=initMap">
+  </script>
+
+</body>
+</html>
