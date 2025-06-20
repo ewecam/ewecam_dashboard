@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Entregas Ewecam - Dashboard Profesional</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+      color: #212529;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .kpi-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .kpi-box {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex: 1;
+      margin: 0 10px;
+      text-align: center;
+    }
+    .kpi-box h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #6c757d;
+    }
+    .kpi-box p {
+      font-size: 24px;
+      margin: 5px 0 0;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    thead {
+      background-color: #f1f3f5;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+    }
+    .badge.green { background-color: #28a745; }
+    .badge.yellow { background-color: #ffc107; color: black; }
+    .badge.red { background-color: #dc3545; }
+    .badge.gray { background-color: #6c757d; }
+  </style>
+</head>
+<body>
+
+  <h2>Mapa de Entregas Ewecam</h2>
+  <div class="kpi-container">
+    <div class="kpi-box">
+      <h3>Entregas Totales</h3>
+      <p>150</p>
+    </div>
+    <div class="kpi-box">
+      <h3>Entregas Completas</h3>
+      <p>120</p>
+    </div>
+    <div class="kpi-box">
+      <h3>Entregas a Tiempo</h3>
+      <p>112</p>
+    </div>
+    <div class="kpi-box">
+      <h3>Incidentes</h3>
+      <p>5</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Unidad</th>
+        <th>Destino</th>
+        <th>Estatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2025-06-18</td>
+        <td>CAM123</td>
+        <td>Querétaro</td>
+        <td><span class="badge green">Entregado completo</span></td>
+      </tr>
+      <tr>
+        <td>2025-06-17</td>
+        <td>CAM123</td>
+        <td>Guanajuato</td>
+        <td><span class="badge yellow">Entregado parcial</span></td>
+      </tr>
+      <tr>
+        <td>2025-06-16</td>
+        <td>CAM128</td>
+        <td>CDMX</td>
+        <td><span class="badge red">No entregado</span></td>
+      </tr>
+      <tr>
+        <td>2025-06-15</td>
+        <td>CAM127</td>
+        <td>San Luis Potosí</td>
+        <td><span class="badge gray">Reagendado</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>
