@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mapa Logístico EWECAM</title>
+    <meta charset="utf-8">
+    <style>
+      #map {{
+        height: 100vh;
+        width: 100%;
+      }}
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwtBw_8xT_SelruOj_ba5hGpYtvMH8MYA&libraries=visualization"></script>
+    <script>
+      let map, heatmap, vehicleMarker, routeSafe, routeDanger;
+
+      const heatmapData = [
+        new google.maps.LatLng(19.432608, -99.133209),
+        new google.maps.LatLng(19.445, -99.14),
+        new google.maps.LatLng(19.44, -99.15)
+      ];
+
+      const rutasSeguras = [
+        {{ lat: 19.44, lng: -99.12 }},
+        {{ lat: 19.45, lng: -99.13 }},
+        {{ lat: 19.46, lng: -99.14 }}
+      ];
+
+      const rutasPeligrosas = [
+        {{ lat: 19.43, lng: -99.15 }},
+        {{ lat: 19.42, lng: -99.16 }},
+        {{ lat: 19.41, lng: -99.17 }}
+      ];
+
+      function initMap() {{
+        map = new google.maps.Map(document.getElementById("map"), {{
+          zoom: 12,
+          center: {{ lat: 19.432608, lng: -99.133209 }},
+          mapTypeId: "roadmap"
+        }});
+
+        // Mapa de calor
+        heatmap = new google.maps.visualization.HeatmapLayer({{
+          data: heatmapData,
+          map: map,
+        }});
+
+        // Ruta segura (verde)
+        routeSafe = new google.maps.Polyline({{
+          path: rutasSeguras,
+          geodesic: true,
+          strokeColor: "#00FF00",
+          strokeOpacity: 1.0,
+          strokeWeight: 4,
+        }});
+        routeSafe.setMap(map);
+
+        // Ruta peligrosa (rojo)
+        routeDanger = new google.maps.Polyline({{
+          path: rutasPeligrosas,
+          geodesic: true,
+          strokeColor: "#FF0000",
+          strokeOpacity: 1.0,
+          strokeWeight: 4,
+        }});
+        routeDanger.setMap(map);
+
+        // Vehículo en tiempo real desde API CMSV6
+        fetchVehicleLocation();
+        setInterval(fetchVehicleLocation, 10000); // Actualiza cada 10 segundos
+      }}
+
+      function fetchVehicleLocation() {{
+        const deviceId = "018270190567";
+        const account = "ewe8";
+        const password = "000000";
+
+        fetch(`https://208.109.37.243:8089/api/Device/GetDeviceLatLng?deviceId=${{deviceId}}&account=${{account}}&password=${{password}}`)
+          .then(res => res.json())
+          .then(data => {{
+            const lat = parseFloat(data?.Latitude);
+            const lng = parseFloat(data?.Longitude);
+            if (!isNaN(lat) && !isNaN(lng)) {{
+              const position = {{ lat, lng }};
+              if (!vehicleMarker) {{
+                vehicleMarker = new google.maps.Marker({{
+                  position,
+                  map,
+                  icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                  title: "Vehículo en tiempo real"
+                }});
+              }} else {{
+                vehicleMarker.setPosition(position);
+              }}
+              map.setCenter(position);
+            }}
+          }})
+          .catch(error => console.error("Error al obtener ubicación:", error));
+      }}
+
+      window.onload = initMap;
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
